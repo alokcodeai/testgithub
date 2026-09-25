@@ -1,0 +1,124 @@
+@model List<Entity.DTO.UdinDetailsDto>
+
+<table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th width="5%">S.No</th>
+            <th width="35%">Particulars</th>
+            <th width="25%">Figures / Values</th>
+            <th width="15%">Denomination</th>
+            <th width="20%">Converted Value</th>
+        </tr>
+    </thead>
+
+    <tbody>
+
+        @if (Model != null && Model.Any())
+        {
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var row = Model[i];
+
+                <tr>
+
+                    <td>
+                        @(i + 1)
+                        @if (row.IsSystemRow == 1)
+                        {
+                            <span class="text-danger">*</span>
+                        }
+                    </td>
+
+                    <td>
+
+                        <input asp-for="@Model[i].Particular"
+                               class="form-control form-control-sm"
+                               readonly />
+
+                        <input asp-for="@Model[i].RowNo" type="hidden" />
+                        <input asp-for="@Model[i].Id" type="hidden" />
+                        <input asp-for="@Model[i].UdinMasterID" type="hidden" />
+                        <input asp-for="@Model[i].IsSystemRow" type="hidden" />
+
+                    </td>
+
+                    <td>
+
+                        @if (row.Particular == "Assessment Year")
+                        {
+                            <select asp-for="@Model[i].FigureValue"
+                                    class="form-select form-select-sm">
+
+                                <option value="">--Select--</option>
+                                <option value="2026-2027">2026-2027</option>
+                                <option value="2025-2026">2025-2026</option>
+                                <option value="2024-2025">2024-2025</option>
+                                <option value="2023-2024">2023-2024</option>
+                                <option value="2022-2023">2022-2023</option>
+                                <option value="2021-2022">2021-2022</option>
+
+                            </select>
+                        }
+                        else
+                        {
+                            <input asp-for="@Model[i].FigureValue"
+                                   class="form-control form-control-sm figure-value"
+
+                                   placeholder="@(row.Particular != null && row.Particular.Contains("Ratio") ? "Ratio"
+                                       : row.Particular != null && row.Particular.Contains("PAN") ? "PAN"
+                                       : "Figures in INR")" />
+                        }
+
+                    </td>
+
+                    <td>
+
+                        @if (row.Particular == "Assessment Year"
+                            || (row.Particular?.Contains("PAN") ?? false)
+                            || (row.Particular?.Contains("Ratio") ?? false))
+                        {
+
+                        }
+                        else
+                        {
+                            <select asp-for="@Model[i].Denomination"
+                                    class="form-select form-select-sm denomination">
+
+                                <option value="">--Select--</option>
+                                <option value="1">Actual</option>
+                                <option value="100">Hundreds</option>
+                                <option value="1000">Thousands</option>
+                                <option value="100000">Lakhs</option>
+                                <option value="1000000">Millions</option>
+                                <option value="10000000">Crores</option>
+
+                            </select>
+                        }
+
+                    </td>
+
+                    <td>
+
+                        @if (row.Particular == "Assessment Year"
+                            || (row.Particular?.Contains("PAN") ?? false)
+                            || (row.Particular?.Contains("Ratio") ?? false))
+                        {
+
+                        }
+                        else
+                        {
+                            <input asp-for="@Model[i].ConvertedValue"
+                                   class="form-control form-control-sm converted-value"
+                                   readonly />
+                        }
+
+                    </td>
+
+                </tr>
+            }
+        }
+
+    </tbody>
+
+</table>
